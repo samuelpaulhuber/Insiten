@@ -1,0 +1,12 @@
+main {
+    margin: 5vh;
+}
+
+.max-container {
+    margin-left: 20vh;
+    margin-right: 20vh;
+}
+
+.centered {
+    margin: 0, auto
+}

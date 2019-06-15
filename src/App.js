@@ -1,20 +1,22 @@
 import React from 'react';
-import './App.scss';
+import './App.css';
+import { Navbar } from 'react-bootstrap';
 import { Switch, Route } from 'react-router-dom';
-import Home from './components/home/home';
+import Home from './components/Home/Home'
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img className="App-logo" alt="logo" />
-      </header>
-      <div className="main">
-        <Switch>
+    <div className="max-container">
+      <Navbar bg="dark" variant="dark">
+        <Navbar.Brand>      
+          Target Tracker
+        </Navbar.Brand>
+      </Navbar>
+      <main>
+      <Switch>
           <Route exact path='/' component={Home}/>
         </Switch>
-      </div>
+      </main>
     </div>
   );
 }
-
-export default App;
+export default App
