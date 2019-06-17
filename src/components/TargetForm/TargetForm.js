@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Col, InputGroup, Button } from 'react-bootstrap';
+import { Form, Col, Button } from 'react-bootstrap';
 import { WithContext as ReactTags } from 'react-tag-input';
 
 const KeyCodes = {
