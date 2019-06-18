@@ -22,6 +22,16 @@ class ViewTargets extends React.Component {
 		util.getAll.apply(this);
 	}
 
+	deleteItem() {
+		// eslint-disable-next-line no-restricted-globals
+		var conf = confirm("Are you sure you want to delete?");
+		if(conf === true){
+			//ok
+		} else {
+			//cancel
+		}
+	}
+
 	render() {		
 		// data table
 		let table = (
@@ -65,7 +75,7 @@ class ViewTargets extends React.Component {
 															<FontAwesomeIcon name="pencil" icon={faBinoculars} />
 														</LinkContainer>
 													</div>
-													<div className="icon-container delete">
+													<div className="icon-container delete" onClick={this.deleteItem}>
 														<FontAwesomeIcon name="times" icon={faPencilAlt} />
 													</div>
 												</div>
