@@ -3,8 +3,10 @@ import FontAwesomeIcon from 'react-fontawesome';
 import { faPencilAlt, faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import './ViewTargets.css';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Button, Spinner, Toast } from 'react-bootstrap';
-import axios from 'axios';
+import { Button, Toast } from 'react-bootstrap';
+import util from '../../libs/util';
+import Spinner from '../Misc/Spinner';
+import ErrorToast from '../Misc/Toast';
 class ViewTargets extends React.Component {
 	constructor(props) {
 		super(props);
@@ -16,28 +18,12 @@ class ViewTargets extends React.Component {
 		};
 	}
 
-	test(a) {
-		console.log(a.json())
-	}
-
 	componentDidMount() {
-			axios.get("http://localhost:5000/api/values")
-			.then(response => {  
-				console.log(response);	
-			}).catch(error => { 
-				console.log(error)
-			}); 
+		util.getAll.apply(this);
 	}
 
-	render() {
-		// let styles = {
-		//   textAlign: 'center'
-		// }
-		let spinner = (
-			<Spinner style={{ display: this.state.isLoading ? 'block' : 'none' }} animation="border" role="status">
-				<span className="sr-only">Loading...</span>
-			</Spinner>
-		);
+	render() {		
+		// data table
 		let table = (
 			<div style={{ display: this.state.isLoading ? 'none' : 'block' }}>
 				<LinkContainer to="/add">
@@ -60,7 +46,7 @@ class ViewTargets extends React.Component {
 						</tr>
 					</thead>
 					<tbody>
-						{!this.state.data
+						{(!this.state.data && this.state.data.map)
 							? null
 							: this.state.data.map((target, i) => {
 									console.log('Entered');
@@ -94,34 +80,9 @@ class ViewTargets extends React.Component {
 		return (
 			<div>
 				<h2>View Targets</h2>
-				{spinner}
+				<Spinner state={this.state} />
 				{table}
-				{this.state.error ? (
-					<div
-						aria-live="polite"
-						aria-atomic="true"
-						style={{
-							position: 'relative',
-							minHeight: '100px',
-						}}
-					>
-						<Toast
-							className="error-toast"
-							style={{
-								position: 'absolute',
-								top: 0,
-								right: 0,
-							}}
-						>
-							<Toast.Header>
-								<img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-								<strong className="mr-auto">Bootstrap</strong>
-								<small>just now</small>
-							</Toast.Header>
-							<Toast.Body>See? Just like this.</Toast.Body>
-						</Toast>
-					</div>
-				) : null}
+				<ErrorToast state={this.state}></ErrorToast>
 			</div>
 		);
 	}

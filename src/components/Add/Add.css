@@ -1,0 +1,28 @@
+.flex-container {
+	display: flex;
+	direction: row;
+	justify-content: center;
+	align-content: space-between;
+}
+
+.icon-container {
+	margin: 5px;
+}
+
+.icon-container.delete {
+	color: red;
+}
+
+h2 {
+	margin-bottom: 5vh;
+}
+
+.fa.fa-plus {
+	margin-right: 1vh;
+}
+
+.error-toast {
+	position: 'absolute';
+	top: 0;
+	right: 0;
+}

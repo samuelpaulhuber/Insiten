@@ -1,37 +1,38 @@
 import React from 'react';
 import { Form, Col, Button } from 'react-bootstrap';
 import { WithContext as ReactTags } from 'react-tag-input';
-
+import Util from '../../libs/util';
 const KeyCodes = {
 	comma: 188,
 	enter: 13,
-  };
-  
-  const delimiters = [KeyCodes.comma, KeyCodes.enter];
+};
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 class TargetForm extends React.Component {
 	constructor(...args) {
 		super(...args);
 
 		this.state = {
+			error: null,
+			isLoading: false,
 			validated: false,
 			tags: [],
+			data: {},
+			test: false
 		};
 		this.handleDelete = this.handleDelete.bind(this);
 		this.handleAddition = this.handleAddition.bind(this);
 		this.handleDrag = this.handleDrag.bind(this);
-		this.handleTagClick = this.handleTagClick.bind(this);
 	}
 
 	handleDelete(i) {
 		const { tags } = this.state;
-		this.setState({
-			tags: tags.filter((tag, index) => index !== i),
-		});
+		this.setState({ ...this.state, tags: tags.filter((tag, index) => index !== i) });
 	}
 
 	handleAddition(tag) {
-		this.setState(state => ({ tags: [...state.tags, tag] }));
+		this.setState(state => ({ ...this.state, tags: [...state.tags, tag] }));
 	}
 
 	handleDrag(tag, currPos, newPos) {
@@ -42,50 +43,86 @@ class TargetForm extends React.Component {
 		newTags.splice(newPos, 0, tag);
 
 		// re-render
-		this.setState({ tags: newTags });
-	}
-
-	handleTagClick(index) {
-		console.log('The tag at index ' + index + ' was clicked');
+		this.setState({ ...this.state, tags: newTags });
 	}
 
 	handleSubmit(event) {
 		const form = event.currentTarget;
-		console.log(form.elements)
+		console.log(form.elements);
 		if (form.checkValidity() === false) {
 			event.preventDefault();
 			event.stopPropagation();
 		}
-		console.log(form.elements.name)
+		console.log(form.elements.name);
+
+		var tempTags = [...this.state.tags];
+		if (this.props && this.props.data && this.props.data.tags) {
+			tempTags = [
+				...tempTags,
+				...this.props.data.contacts.map(contact => {
+					return {
+						id: contact,
+						text: contact,
+					};
+				}),
+			];
+		}
+
 		const company = {
+			id: this.props.id ? this.props.id : 0,
 			name: form.elements.name.value,
 			status: form.elements.status.value,
 			city: form.elements.city.value,
 			state: form.elements.state.value,
 			zip: form.elements.zip.value,
 			description: form.elements.description.value,
-			contacts: this.state.tags
-		}
+			contacts: tempTags.map((tag) => {
+				return tag.text;
+			}),
+		};
 
-		console.log(company.contacts);
-		this.setState({ validated: true });
+		Util.save(company).apply(this);
+
+		event.preventDefault();
 	}
 
 	render() {
-		const { validated,tags } = this.state;
+		var data = this.props.data ? this.props.data : {};
+		var { validated, tags, test } = this.state;
+		var tempTags = [...tags];
+		if (data && data.contacts && data.contacts && !test) {
+			
+			tempTags = [
+				...tags,
+				...data.contacts.map(contact => {
+					return {
+						id: contact,
+						text: contact,
+					};
+				}),
+			];
+			this.setState({...this.state, test:true, tags:[...tempTags] })
+		}
 		return (
 			<Form noValidate validated={validated} onSubmit={e => this.handleSubmit(e)}>
 				<Form.Row>
 					<Form.Group as={Col} md="6" controlId="comapny.name">
 						<Form.Label>Company name</Form.Label>
-						<Form.Control required type="text" ref="name" name="name" placeholder="Compnay name" />
+						<Form.Control
+							required
+							type="text"
+							ref="name"
+							name="name"
+							placeholder="Compnay name"
+							value={data.name}
+						/>
 						<Form.Control.Feedback type="invalid">
 							Please enter the name of the company.
 						</Form.Control.Feedback>
 					</Form.Group>
 					<Form.Group as={Col} md="6" controlId="company.status">
 						<Form.Label>Status</Form.Label>
-						<Form.Control as="select" ref="status" name="status">
+						<Form.Control as="select" ref="status" name="status" value={data.status}>
 							<option value="1">Researching</option>
 							<option value="2">Pending Approval</option>
 							<option value="3">Approved</option>
@@ -96,14 +133,21 @@ class TargetForm extends React.Component {
 				<Form.Row>
 					<Form.Group as={Col} md="3" controlId="company.city">
 						<Form.Label>City</Form.Label>
-						<Form.Control type="text" placeholder="City" ref="city" name="city" required />
+						<Form.Control
+							type="text"
+							placeholder="City"
+							ref="city"
+							name="city"
+							value={data.city}
+							required
+						/>
 						<Form.Control.Feedback type="invalid">
 							Please enter the city in which the company is located.
 						</Form.Control.Feedback>
 					</Form.Group>
 					<Form.Group as={Col} md="3" controlId="company.state">
 						<Form.Label>State</Form.Label>
-						<Form.Control as="select"  ref="state" name="state" required>
+						<Form.Control as="select" ref="state" name="state" value={data.state} required>
 							<option value="AL">Alabama</option>
 							<option value="AK">Alaska</option>
 							<option value="AZ">Arizona</option>
@@ -162,7 +206,7 @@ class TargetForm extends React.Component {
 					</Form.Group>
 					<Form.Group as={Col} md="3" controlId="company.zip">
 						<Form.Label>Zip</Form.Label>
-						<Form.Control type="text" placeholder="Zip" ref="zip" name="zip" required />
+						<Form.Control type="text" placeholder="Zip" value={data.zip} ref="zip" name="zip" required />
 						<Form.Control.Feedback type="invalid">
 							Please enter the zip code in which the company is located.
 						</Form.Control.Feedback>
@@ -171,7 +215,13 @@ class TargetForm extends React.Component {
 				<Form.Row>
 					<Form.Group as={Col} md="12" controlId="company.description">
 						<Form.Label>Company Description</Form.Label>
-						<Form.Control as="textarea" rows="3"  ref="description" name="description" />
+						<Form.Control
+							as="textarea"
+							rows="3"
+							value={data.description}
+							ref="description"
+							name="description"
+						/>
 					</Form.Group>
 				</Form.Row>
 				<Form.Row>
@@ -185,7 +235,7 @@ class TargetForm extends React.Component {
 								handleAddition={this.handleAddition}
 								handleDrag={this.handleDrag}
 								handleTagClick={this.handleTagClick}
-								placeholder='Add a contact'
+								placeholder="Add a contact"
 							/>
 						</div>
 					</Form.Group>
