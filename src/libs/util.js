@@ -52,18 +52,18 @@ const util = {
 				});
 			});
 	},
-	delete(id) {
+	delete(id,test) {
 		axios
 			.delete(`http://localhost:5000/api/values/${id}`)
 			.then(response => {
 				if (response && response.data && response.data.success) {
-					this.setState({
+					test.setState({
 						data: response.data.data,
 						error: false,
 						isLoading: false,
 					});
 				} else {
-					this.setState({
+					test.setState({
 						data: response,
 						error: true,
 						isLoading: false,
@@ -71,7 +71,7 @@ const util = {
 				}
 			})
 			.catch(error => {
-				this.setState({
+				test.setState({
 					data: error,
 					error: true,
 					isLoading: false,

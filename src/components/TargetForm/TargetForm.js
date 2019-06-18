@@ -81,7 +81,7 @@ class TargetForm extends React.Component {
 			}),
 		};
 
-		Util.save(company).apply(this);
+Util.save.apply(this, [company]);
 
 		event.preventDefault();
 	}

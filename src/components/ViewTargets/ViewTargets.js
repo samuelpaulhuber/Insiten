@@ -10,23 +10,33 @@ import ErrorToast from '../Misc/Toast';
 class ViewTargets extends React.Component {
 	constructor(props) {
 		super(props);
-
+		this.deleteItem = this.deleteItem.bind(this);
 		this.state = {
 			data: [],
 			isLoading: true,
 			error: null,
 		};
 	}
+	
 
 	componentDidMount() {
 		util.getAll.apply(this);
 	}
 
-	deleteItem() {
+	deleteItem(id) {
 		// eslint-disable-next-line no-restricted-globals
 		var conf = confirm("Are you sure you want to delete?");
 		if(conf === true){
-			//ok
+			util.delete(id,this);
+			var test = [...this.state.data];
+			var testData = test.find(
+				 (value) => {
+					 return value.id !== id
+				});
+
+			if(!testData || !testData.length)
+				testData = new Array();
+			this.setState({data: !testData ? {} : testData, isLoading: false, error: null});
 		} else {
 			//cancel
 		}
@@ -56,7 +66,7 @@ class ViewTargets extends React.Component {
 						</tr>
 					</thead>
 					<tbody>
-						{(!this.state.data && this.state.data.map)
+						{(!this.state.data && this.state.data.map )
 							? null
 							: this.state.data.map((target, i) => {
 									console.log('Entered');
@@ -75,7 +85,7 @@ class ViewTargets extends React.Component {
 															<FontAwesomeIcon name="pencil" icon={faBinoculars} />
 														</LinkContainer>
 													</div>
-													<div className="icon-container delete" onClick={this.deleteItem}>
+													<div className="icon-container delete" onClick={() => this.deleteItem(target.id)}>
 														<FontAwesomeIcon name="times" icon={faPencilAlt} />
 													</div>
 												</div>
