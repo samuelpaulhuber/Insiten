@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/Insiten/static/css/main.cd7de814.chunk.css",
-    "main.js": "/Insiten/static/js/main.e0c04093.chunk.js",
-    "main.js.map": "/Insiten/static/js/main.e0c04093.chunk.js.map",
+    "main.js": "/Insiten/static/js/main.b4b9544d.chunk.js",
+    "main.js.map": "/Insiten/static/js/main.b4b9544d.chunk.js.map",
     "runtime~main.js": "/Insiten/static/js/runtime~main.2411df91.js",
     "runtime~main.js.map": "/Insiten/static/js/runtime~main.2411df91.js.map",
-    "static/js/2.d1474db7.chunk.js": "/Insiten/static/js/2.d1474db7.chunk.js",
-    "static/js/2.d1474db7.chunk.js.map": "/Insiten/static/js/2.d1474db7.chunk.js.map",
+    "static/js/2.592575ec.chunk.js": "/Insiten/static/js/2.592575ec.chunk.js",
+    "static/js/2.592575ec.chunk.js.map": "/Insiten/static/js/2.592575ec.chunk.js.map",
     "index.html": "/Insiten/index.html",
-    "precache-manifest.ca4ca3711d036249b3881617bd4f9e0a.js": "/Insiten/precache-manifest.ca4ca3711d036249b3881617bd4f9e0a.js",
+    "precache-manifest.473985b4b836d30d9b0bb56ffd15bc2c.js": "/Insiten/precache-manifest.473985b4b836d30d9b0bb56ffd15bc2c.js",
     "service-worker.js": "/Insiten/service-worker.js",
     "static/css/main.cd7de814.chunk.css.map": "/Insiten/static/css/main.cd7de814.chunk.css.map"
   }

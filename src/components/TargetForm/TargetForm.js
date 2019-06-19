@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Col, Button } from 'react-bootstrap';
 import { WithContext as ReactTags } from 'react-tag-input';
 import Util from '../../libs/util';
+import { withRouter } from 'react-router-dom';
 const KeyCodes = {
 	comma: 188,
 	enter: 13,
@@ -84,6 +85,7 @@ class TargetForm extends React.Component {
 Util.save.apply(this, [company]);
 
 		event.preventDefault();
+		this.props.history.push('/viewtargets');
 	}
 
 	render() {
@@ -246,4 +248,4 @@ Util.save.apply(this, [company]);
 	}
 }
 
-export default TargetForm;
+export default withRouter(TargetForm);
