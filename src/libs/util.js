@@ -1,8 +1,9 @@
 import axios from 'axios';
+const url = 'http://insitenserver.azurewebsites.net/api/'; //'http://localhost:5000/api/'
 const util = {
 	getAll() {
 		axios
-			.get('http://localhost:5000/api/values')
+			.get(url + 'values')
 			.then(response => {
 				if (response && response.data && response.data.success) {
 					this.setState({
@@ -28,7 +29,7 @@ const util = {
 	},
 	get(id) {
 		axios
-			.get(`http://localhost:5000/api/values/${id}`)
+			.get(`${url}values/${id}`)
 			.then(response => {
 				if (response && response.data && response.data.success) {
 					this.setState({
@@ -54,7 +55,7 @@ const util = {
 	},
 	delete(id,test) {
 		axios
-			.delete(`http://localhost:5000/api/values/${id}`)
+			.delete(`${url}values/${id}`)
 			.then(response => {
 				if (response && response.data && response.data.success) {
 					test.setState({
@@ -80,7 +81,7 @@ const util = {
 	},
 	save(company) {
 		axios
-			.post('http://localhost:5000/api/values', company)
+			.post(url + 'values', company)
 			.then(response => {
 				if (response && response.data && response.data.success) {
 					this.setState({
