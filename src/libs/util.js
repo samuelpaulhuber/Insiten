@@ -1,6 +1,6 @@
 import axios from 'axios';
-const url = 'https://insitenserver.azurewebsites.net/api/'; 
-//const url = 'http://localhost:5000/api/'
+const url = 'https://insitensrv.azurewebsites.net/api/'; 
+//const url = 'http://localhost:5000/api/';
 const util = {
 	getAll() {
 		axios
@@ -28,7 +28,7 @@ const util = {
 				});
 			});
 	},
-	get(id) {
+	async get(id) {
 		axios
 			.get(`${url}values/${id}`)
 			.then(response => {
@@ -80,8 +80,8 @@ const util = {
 				});
 			});
 	},
-	save(company) {
-		axios
+	save(company, func) {
+		return axios
 			.post(url + 'values', company)
 			.then(response => {
 				if (response && response.data && response.data.success) {
@@ -90,12 +90,14 @@ const util = {
 						error: false,
 						isLoading: false,
 					});
+					func();
 				} else {
 					this.setState({
 						data: response,
 						error: true,
 						isLoading: false,
 					});
+					func();
 				}
 			})
 			.catch(error => {

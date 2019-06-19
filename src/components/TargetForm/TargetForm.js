@@ -1,14 +1,8 @@
 import React from 'react';
-import { Form, Col, Button } from 'react-bootstrap';
-import { WithContext as ReactTags } from 'react-tag-input';
+import { Form, Col, Button, Container, Row } from 'react-bootstrap';
 import Util from '../../libs/util';
 import { withRouter } from 'react-router-dom';
-const KeyCodes = {
-	comma: 188,
-	enter: 13,
-};
-
-const delimiters = [KeyCodes.comma, KeyCodes.enter];
+import './TargetForm.css';
 
 class TargetForm extends React.Component {
 	constructor(...args) {
@@ -20,11 +14,67 @@ class TargetForm extends React.Component {
 			validated: false,
 			tags: [],
 			data: {},
-			test: false
+			test: false,
+			tempContact: '',
+			tempYear: '',
+			tempProfit: '',
+			yearlyRevenue: [],
 		};
+
 		this.handleDelete = this.handleDelete.bind(this);
 		this.handleAddition = this.handleAddition.bind(this);
 		this.handleDrag = this.handleDrag.bind(this);
+		this.handleAddTag = this.handleAddTag.bind(this);
+		this.handleTempContactChange = this.handleTempContactChange.bind(this);
+		this.handleTempProfitChange = this.handleTempProfitChange.bind(this);
+		this.handleTempYearChange = this.handleTempYearChange.bind(this);
+		this.handleRemoveContact = this.handleRemoveContact.bind(this);
+		this.handleRemoveProfit = this.handleRemoveProfit.bind(this);
+	}
+
+	handleTempProfitChange(event) {
+		this.setState({ ...this.state, tempProfit: event.target.value });
+	}
+
+	handleTempYearChange(event) {
+		this.setState({ ...this.state, tempYear: event.target.value });
+	}
+
+	handleTempContactChange(event) {
+		this.setState({ ...this.state, tempContact: event.target.value });
+	}
+
+	handleRemoveContact(text) {
+		const { tags } = this.state;
+		var test = tags.map((tag, i) => {
+			if (text !== tag) return tag;
+		});
+
+		this.setState({ ...this.state, tags: test });
+	}
+
+	handleRemoveProfit(year) {
+		const { yearlyRevenue } = this.state;
+		var test = yearlyRevenue.map((profit, i) => {
+			if (year !== profit.year) return profit;
+		});
+
+		this.setState({ ...this.state, yearlyRevenue: test });
+	}
+
+	handleAddTag(e) {
+		const { tags } = this.state;
+		var test = tags ? tags.slice() : [];
+		test.push(this.state.tempContact);
+		this.setState({ ...this.state, tags: test });
+	}
+
+	handleAddProfit(e) {
+		const { yearlyRevenue } = this.state;
+
+		var test = yearlyRevenue ? yearlyRevenue.slice() : [];
+		test.push({ year: this.state.tempYear, profit: this.state.tempProfit });
+		this.setState({ ...this.state, yearlyRevenue: test });
 	}
 
 	handleDelete(i) {
@@ -53,10 +103,11 @@ class TargetForm extends React.Component {
 		if (form.checkValidity() === false) {
 			event.preventDefault();
 			event.stopPropagation();
+			return;
 		}
 		console.log(form.elements.name);
 
-		var tempTags = [...this.state.tags];
+		var tempTags = this.state.tags.slice();
 		if (this.props && this.props.data && this.props.data.tags) {
 			tempTags = [
 				...tempTags,
@@ -77,36 +128,50 @@ class TargetForm extends React.Component {
 			state: form.elements.state.value,
 			zip: form.elements.zip.value,
 			description: form.elements.description.value,
-			contacts: tempTags.map((tag) => {
-				return tag.text;
-			}),
+			contacts: this.state.tags, // ? this.state.tags.map((t) => { return t.text }) : [],
+			yearlyRevenue: this.state.yearlyRevenue,
 		};
 
-Util.save.apply(this, [company]);
-
+		Util.save.apply(this, [company, this.redirectToViewTargets.bind(this)]);
+		
 		event.preventDefault();
+	}
+
+	redirectToViewTargets() {
 		this.props.history.push('/viewtargets');
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			// error: null,
+			// isLoading: false,
+			// validated: false,
+			// tags: [],
+			// data: {},
+			// test: false,
+			// tempContact: '',
+			// tempYear: '',
+			// tempProfit: '',
+			// yearlyRevenue: [],
+			error: this.state.error,
+			isLoading: this.state.isLoading,
+			validated: this.state.validated,
+			test: this.state.test,
+			tempContact: this.state.tempContact,
+			tempYear: this.state.tempYear,
+			tempProfit: this.state.tempProfit,
+			data: nextProps.data,
+			tags: nextProps.data.contacts,
+			yearlyRevenue: nextProps.data.yearlyRevenue
+		});
 	}
 
 	render() {
 		var data = this.props.data ? this.props.data : {};
-		var { validated, tags, test } = this.state;
-		var tempTags = [...tags];
-		if (data && data.contacts && data.contacts && !test) {
-			
-			tempTags = [
-				...tags,
-				...data.contacts.map(contact => {
-					return {
-						id: contact,
-						text: contact,
-					};
-				}),
-			];
-			this.setState({...this.state, test:true, tags:[...tempTags] })
-		}
+		var { validated } = this.state;
+
 		return (
-			<Form noValidate validated={validated} onSubmit={e => this.handleSubmit(e)}>
+			<Form validated={validated} onSubmit={e => this.handleSubmit(e)}>
 				<Form.Row>
 					<Form.Group as={Col} md="6" controlId="comapny.name">
 						<Form.Label>Company name</Form.Label>
@@ -208,7 +273,14 @@ Util.save.apply(this, [company]);
 					</Form.Group>
 					<Form.Group as={Col} md="3" controlId="company.zip">
 						<Form.Label>Zip</Form.Label>
-						<Form.Control type="text" placeholder="Zip" defaultValue={data.zip} ref="zip" name="zip" required />
+						<Form.Control
+							type="text"
+							placeholder="Zip"
+							defaultValue={data.zip}
+							ref="zip"
+							name="zip"
+							required
+						/>
 						<Form.Control.Feedback type="invalid">
 							Please enter the zip code in which the company is located.
 						</Form.Control.Feedback>
@@ -218,30 +290,126 @@ Util.save.apply(this, [company]);
 					<Form.Group as={Col} md="12" controlId="company.description">
 						<Form.Label>Company Description</Form.Label>
 						<Form.Control
-							as="textarea"
-							rows="3"
+							type="textarea"
 							defaultValue={data.description}
 							ref="description"
 							name="description"
 						/>
 					</Form.Group>
 				</Form.Row>
-				<Form.Row>
-					<Form.Group as={Col} md="12" controlId="company.contacts">
-						<Form.Label>Company Contacts</Form.Label>
-						<div>
-							<ReactTags
-								tags={tags}
-								delimiters={delimiters}
-								handleDelete={this.handleDelete}
-								handleAddition={this.handleAddition}
-								handleDrag={this.handleDrag}
-								handleTagClick={this.handleTagClick}
-								placeholder="Add a contact"
+				<div className="listContainer">
+					<Form.Row>
+						<Form.Group as={Col} md="6">
+							<h3>Conctacts</h3>
+							<Form.Label>Name</Form.Label>
+							<Form.Control
+								type="text"
+								placeholder="Contact Name"
+								ref="contactTemp"
+								name="contactTemp"
+								onChange={e => this.handleTempContactChange(e)}
 							/>
-						</div>
-					</Form.Group>
-				</Form.Row>
+							<Button type="button" className="addButton" onClick={this.handleAddTag}>
+								Add
+							</Button>
+						</Form.Group>
+						<Form.Group as={Col} md="3">
+							<h3>Financial Info</h3>
+							<Form.Label>Year</Form.Label>
+							<Form.Control
+								md="3"
+								type="text"
+								placeholder="Year"
+								ref="year"
+								name="year"
+								onChange={e => this.handleTempYearChange(e)}
+							/>
+							<Button type="button" className="addButton" onClick={() => this.handleAddProfit()}>
+								Add
+							</Button>
+						</Form.Group>
+						<Form.Group as={Col} md="3">
+							<h3>&nbsp;</h3>
+							<Form.Label>Profit</Form.Label>
+							<Form.Control
+								type="text"
+								placeholder="Profit"
+								ref="profit"
+								name="profit"
+								onChange={e => this.handleTempProfitChange(e)}
+							/>
+						</Form.Group>
+					</Form.Row>
+					<Form.Row>
+						<Form.Group as={Col}>
+							<h4>All Contacts:</h4>
+							<Row>
+									<Col><strong>Name</strong></Col>
+								</Row>
+							<div>
+								<ul>
+									{!this.state.tags
+										? null
+										: this.state.tags.map((tag, i) => {
+												if (tag) {
+													return (
+														<Container className="allContacts" key={tag + i}>
+															<Row md="12">
+																<Col md="6">{tag}</Col>
+																<Col md="6">
+																	<Button
+																		type="button"
+																		onClick={() => this.handleRemoveContact(tag)}
+																	>
+																		Remove
+																	</Button>
+																</Col>
+															</Row>
+														</Container>
+													);
+												}
+										  })}
+								</ul>
+							</div>
+						</Form.Group>
+						<Form.Group as={Col} md="6">
+							<div>
+								<h4>All Profits</h4>
+								<Row>
+									<Col><strong>Year</strong></Col>
+									<Col><strong>Profit</strong></Col>
+									<Col></Col>
+								</Row>
+								<ul>
+									{!this.state.yearlyRevenue
+										? null
+										: this.state.yearlyRevenue.map((profit, i) => {
+												if (profit && profit.year) {
+													return (
+														<Container key={profit + i}>
+															<Row className="short-button">
+																<Col>{profit.year}</Col>
+																<Col>{profit.profit}</Col>
+																<Col>
+																	<Button
+																		type="button"
+																		onClick={() =>
+																			this.handleRemoveProfit(profit.year)
+																		}
+																	>
+																		Remove
+																	</Button>
+																</Col>
+															</Row>
+														</Container>
+													);
+												}
+										  })}
+								</ul>
+							</div>
+						</Form.Group>
+					</Form.Row>
+				</div>
 				<Button type="submit">Submit form</Button>
 			</Form>
 		);

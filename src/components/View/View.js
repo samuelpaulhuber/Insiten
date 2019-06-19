@@ -23,7 +23,7 @@ class Add extends React.Component {
 	render(){
 		return (
 			<div>
-				<h2>Add a new target</h2>
+				<h2>Edit target</h2>
 				<Spinner state={this.state}></Spinner>
 				<TargetForm data={this.state.data} id={this.props.match.params.id}></TargetForm>
 			</div>
