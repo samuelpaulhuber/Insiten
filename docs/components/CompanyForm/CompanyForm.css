@@ -1,0 +1,33 @@
+.listContainer {
+    border: thin;
+    border-style:  solid;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-color: #cccccc;
+}
+
+ul {
+    padding-left: 0px
+}
+
+li {
+    padding-bottom: 10px
+}
+
+button.addButton {
+    margin-top: 5px;
+}
+
+.row.short-button {
+    margin-bottom: 10px;
+}
+
+.allContacts .row {
+    margin-bottom: 10px
+}
+
+.error-toast {
+	position: 'absolute';
+	top: 0;
+	right: 0;
+}
