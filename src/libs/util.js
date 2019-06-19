@@ -1,7 +1,8 @@
 import axios from 'axios';
-const url = 'https://insitensrv.azurewebsites.net/api/'; 
-//const url = 'http://localhost:5000/api/';
+const url = 'https://insitensrv.azurewebsites.net/api/'; //prod
+//const url = 'http://localhost:5000/api/'; //dev
 const util = {
+	// call to retrieve list of all companies
 	getAll() {
 		axios
 			.get(url + 'values')
@@ -22,13 +23,15 @@ const util = {
 			})
 			.catch(error => {
 				this.setState({
-					data: error,
 					error: true,
+					data: error.message,					
 					isLoading: false,
 				});
 			});
 	},
-	async get(id) {
+
+	// call to get company by id
+	get(id) {
 		axios
 			.get(`${url}values/${id}`)
 			.then(response => {
@@ -48,24 +51,26 @@ const util = {
 			})
 			.catch(error => {
 				this.setState({
-					data: error,
+					data: error.message,
 					error: true,
 					isLoading: false,
 				});
 			});
 	},
-	delete(id,test) {
+
+	// call to delete a company by id
+	delete(id,containingThis) {
 		axios
 			.delete(`${url}values/${id}`)
 			.then(response => {
 				if (response && response.data && response.data.success) {
-					test.setState({
+					containingThis.setState({
 						data: response.data.data,
 						error: false,
 						isLoading: false,
 					});
 				} else {
-					test.setState({
+					containingThis.setState({
 						data: response,
 						error: true,
 						isLoading: false,
@@ -73,14 +78,16 @@ const util = {
 				}
 			})
 			.catch(error => {
-				test.setState({
-					data: error,
+				containingThis.setState({
+					data: error.message,
 					error: true,
 					isLoading: false,
 				});
 			});
 	},
-	save(company, func) {
+
+	// call to save/update the company
+	save(company, success) {
 		return axios
 			.post(url + 'values', company)
 			.then(response => {
@@ -90,19 +97,18 @@ const util = {
 						error: false,
 						isLoading: false,
 					});
-					func();
+					success();
 				} else {
 					this.setState({
 						data: response,
 						error: true,
 						isLoading: false,
 					});
-					func();
 				}
 			})
 			.catch(error => {
 				this.setState({
-					data: error,
+					data: error.message,
 					error: true,
 					isLoading: false,
 				});

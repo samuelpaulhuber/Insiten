@@ -2,17 +2,20 @@ import React from 'react';
 import { Form, Col, Button, Container, Row } from 'react-bootstrap';
 import Util from '../../libs/util';
 import { withRouter } from 'react-router-dom';
-import './TargetForm.css';
+import './CompanyForm.css';
+import ErrorToast from '../Misc/ErrorToast';
 
-class TargetForm extends React.Component {
+// main form for adding/updating company info
+class CompanyForm extends React.Component {
 	constructor(...args) {
 		super(...args);
 
+		// default state
 		this.state = {
 			error: null,
 			isLoading: false,
 			validated: false,
-			tags: [],
+			contacts: [],
 			data: {},
 			test: false,
 			tempContact: '',
@@ -21,10 +24,8 @@ class TargetForm extends React.Component {
 			yearlyRevenue: [],
 		};
 
-		this.handleDelete = this.handleDelete.bind(this);
-		this.handleAddition = this.handleAddition.bind(this);
-		this.handleDrag = this.handleDrag.bind(this);
-		this.handleAddTag = this.handleAddTag.bind(this);
+		// binding methods to this
+		this.handleAddcontact = this.handleAddcontact.bind(this);
 		this.handleTempContactChange = this.handleTempContactChange.bind(this);
 		this.handleTempProfitChange = this.handleTempProfitChange.bind(this);
 		this.handleTempYearChange = this.handleTempYearChange.bind(this);
@@ -32,85 +33,91 @@ class TargetForm extends React.Component {
 		this.handleRemoveProfit = this.handleRemoveProfit.bind(this);
 	}
 
+	// store changes to field in state
 	handleTempProfitChange(event) {
 		this.setState({ ...this.state, tempProfit: event.target.value });
 	}
 
+	// store changes to field in state
 	handleTempYearChange(event) {
 		this.setState({ ...this.state, tempYear: event.target.value });
 	}
 
+	// store changes to field in state
 	handleTempContactChange(event) {
 		this.setState({ ...this.state, tempContact: event.target.value });
 	}
 
+	// remove contact from state
 	handleRemoveContact(text) {
-		const { tags } = this.state;
-		var test = tags.map((tag, i) => {
-			if (text !== tag) return tag;
+		const { contacts } = this.state;
+		var reducedArr = contacts.map((contact, i) => {
+			if (text !== contact) return contact;
 		});
 
-		this.setState({ ...this.state, tags: test });
+		this.setState({ ...this.state, contacts: reducedArr });
 	}
 
+	// remove profit entry from state
 	handleRemoveProfit(year) {
 		const { yearlyRevenue } = this.state;
-		var test = yearlyRevenue.map((profit, i) => {
+		var reducedArr = yearlyRevenue.map((profit, i) => {
 			if (year !== profit.year) return profit;
 		});
 
-		this.setState({ ...this.state, yearlyRevenue: test });
+		this.setState({ ...this.state, yearlyRevenue: reducedArr });
 	}
 
-	handleAddTag(e) {
-		const { tags } = this.state;
-		var test = tags ? tags.slice() : [];
-		test.push(this.state.tempContact);
-		this.setState({ ...this.state, tags: test });
+	// add a new contact to state
+	handleAddcontact(e) {
+		const { contacts } = this.state;
+		var contactsCpy = contacts ? contacts.slice() : [];
+
+		if(!this.state.tempContact || this.state.contacts.indexOf(this.state.tempContact) >= 0)
+			return;
+
+		contactsCpy.push(this.state.tempContact);
+		var stateVar = { ...this.state };
+		stateVar.contacts = contactsCpy;
+		stateVar.tempContact = '';
+		this.setState(stateVar);
 	}
 
+	// add new profit value to state
 	handleAddProfit(e) {
 		const { yearlyRevenue } = this.state;
 
-		var test = yearlyRevenue ? yearlyRevenue.slice() : [];
-		test.push({ year: this.state.tempYear, profit: this.state.tempProfit });
-		this.setState({ ...this.state, yearlyRevenue: test });
+		var existingContact = yearlyRevenue.find((elm) => { 
+			if (elm && this.state.tempYear && elm.year === this.state.tempYear) 
+				return true; 
+			return false; 
+		});
+
+		if(!this.state.tempYear || existingContact)
+			return;
+
+		var yearlyRevCpy = yearlyRevenue ? yearlyRevenue.slice() : [];
+		yearlyRevCpy.push({ year: this.state.tempYear, profit: this.state.tempProfit });
+		this.setState({ ...this.state, yearlyRevenue: yearlyRevCpy });
 	}
 
-	handleDelete(i) {
-		const { tags } = this.state;
-		this.setState({ ...this.state, tags: tags.filter((tag, index) => index !== i) });
-	}
-
-	handleAddition(tag) {
-		this.setState(state => ({ ...this.state, tags: [...state.tags, tag] }));
-	}
-
-	handleDrag(tag, currPos, newPos) {
-		const tags = [...this.state.tags];
-		const newTags = tags.slice();
-
-		newTags.splice(currPos, 1);
-		newTags.splice(newPos, 0, tag);
-
-		// re-render
-		this.setState({ ...this.state, tags: newTags });
-	}
-
+	// save our changes
 	handleSubmit(event) {
+		// get the form
 		const form = event.currentTarget;
-		console.log(form.elements);
+
+		// check if the form is valid if not return
 		if (form.checkValidity() === false) {
 			event.preventDefault();
 			event.stopPropagation();
 			return;
 		}
-		console.log(form.elements.name);
 
-		var tempTags = this.state.tags.slice();
-		if (this.props && this.props.data && this.props.data.tags) {
-			tempTags = [
-				...tempTags,
+		// format contacts for how they will be stored in the back end
+		var tempcontacts = this.state.contacts.slice();
+		if (this.props && this.props.data && this.props.data.contacts) {
+			tempcontacts = [
+				...tempcontacts,
 				...this.props.data.contacts.map(contact => {
 					return {
 						id: contact,
@@ -120,6 +127,7 @@ class TargetForm extends React.Component {
 			];
 		}
 
+		// create our object to be stored in the back end
 		const company = {
 			id: this.props.id ? this.props.id : 0,
 			name: form.elements.name.value,
@@ -128,31 +136,24 @@ class TargetForm extends React.Component {
 			state: form.elements.state.value,
 			zip: form.elements.zip.value,
 			description: form.elements.description.value,
-			contacts: this.state.tags, // ? this.state.tags.map((t) => { return t.text }) : [],
+			contacts: this.state.contacts,
 			yearlyRevenue: this.state.yearlyRevenue,
 		};
 
-		Util.save.apply(this, [company, this.redirectToViewTargets.bind(this)]);
-		
+		// make service call to save changes
+		Util.save.apply(this, [company, this.redirectToViewCompanies.bind(this)]);
+
 		event.preventDefault();
 	}
 
-	redirectToViewTargets() {
-		this.props.history.push('/viewtargets');
+	// if successful this runs and redirects us
+	redirectToViewCompanies() {
+		this.props.history.push('/viewcompanies');
 	}
 
 	componentWillReceiveProps(nextProps) {
+		// service call completed update the state
 		this.setState({
-			// error: null,
-			// isLoading: false,
-			// validated: false,
-			// tags: [],
-			// data: {},
-			// test: false,
-			// tempContact: '',
-			// tempYear: '',
-			// tempProfit: '',
-			// yearlyRevenue: [],
 			error: this.state.error,
 			isLoading: this.state.isLoading,
 			validated: this.state.validated,
@@ -161,19 +162,25 @@ class TargetForm extends React.Component {
 			tempYear: this.state.tempYear,
 			tempProfit: this.state.tempProfit,
 			data: nextProps.data,
-			tags: nextProps.data.contacts,
-			yearlyRevenue: nextProps.data.yearlyRevenue
+			contacts: nextProps.data.contacts,
+			yearlyRevenue: nextProps.data.yearlyRevenue,
 		});
 	}
 
 	render() {
+		// default data to empty if call hasnt succeeded yet
 		var data = this.props.data ? this.props.data : {};
+
 		var { validated } = this.state;
 
 		return (
+			<div>
+			{/* create our form and layout */}
+			<ErrorToast state={this.state}></ErrorToast>
 			<Form validated={validated} onSubmit={e => this.handleSubmit(e)}>
 				<Form.Row>
 					<Form.Group as={Col} md="6" controlId="comapny.name">
+						{/* name */}
 						<Form.Label>Company name</Form.Label>
 						<Form.Control
 							required
@@ -198,6 +205,7 @@ class TargetForm extends React.Component {
 					</Form.Group>
 				</Form.Row>
 				<Form.Row>
+					{/* city */}
 					<Form.Group as={Col} md="3" controlId="company.city">
 						<Form.Label>City</Form.Label>
 						<Form.Control
@@ -212,6 +220,7 @@ class TargetForm extends React.Component {
 							Please enter the city in which the company is located.
 						</Form.Control.Feedback>
 					</Form.Group>
+					{/* state */}
 					<Form.Group as={Col} md="3" controlId="company.state">
 						<Form.Label>State</Form.Label>
 						<Form.Control as="select" ref="state" name="state" defaultValue={data.state} required>
@@ -271,6 +280,7 @@ class TargetForm extends React.Component {
 							Please enter the state in which the company is located.
 						</Form.Control.Feedback>
 					</Form.Group>
+					{/* zip */}
 					<Form.Group as={Col} md="3" controlId="company.zip">
 						<Form.Label>Zip</Form.Label>
 						<Form.Control
@@ -287,6 +297,7 @@ class TargetForm extends React.Component {
 					</Form.Group>
 				</Form.Row>
 				<Form.Row>
+					{/* description */}
 					<Form.Group as={Col} md="12" controlId="company.description">
 						<Form.Label>Company Description</Form.Label>
 						<Form.Control
@@ -297,6 +308,7 @@ class TargetForm extends React.Component {
 						/>
 					</Form.Group>
 				</Form.Row>
+				{/* contacts */}
 				<div className="listContainer">
 					<Form.Row>
 						<Form.Group as={Col} md="6">
@@ -309,7 +321,7 @@ class TargetForm extends React.Component {
 								name="contactTemp"
 								onChange={e => this.handleTempContactChange(e)}
 							/>
-							<Button type="button" className="addButton" onClick={this.handleAddTag}>
+							<Button type="button" className="addButton" onClick={this.handleAddcontact}>
 								Add
 							</Button>
 						</Form.Group>
@@ -344,22 +356,27 @@ class TargetForm extends React.Component {
 						<Form.Group as={Col}>
 							<h4>All Contacts:</h4>
 							<Row>
-									<Col><strong>Name</strong></Col>
-								</Row>
+								<Col>
+									<strong>Name</strong>
+								</Col>
+							</Row>
 							<div>
 								<ul>
-									{!this.state.tags
+									{/* loop through and render all contact rows */}
+									{!this.state.contacts
 										? null
-										: this.state.tags.map((tag, i) => {
-												if (tag) {
+										: this.state.contacts.map((contact, i) => {
+												if (contact) {
 													return (
-														<Container className="allContacts" key={tag + i}>
+														<Container className="allContacts" key={contact + i}>
 															<Row md="12">
-																<Col md="6">{tag}</Col>
+																<Col md="6">{contact}</Col>
 																<Col md="6">
 																	<Button
 																		type="button"
-																		onClick={() => this.handleRemoveContact(tag)}
+																		onClick={() =>
+																			this.handleRemoveContact(contact)
+																		}
 																	>
 																		Remove
 																	</Button>
@@ -372,15 +389,21 @@ class TargetForm extends React.Component {
 								</ul>
 							</div>
 						</Form.Group>
+						{/* profits */}
 						<Form.Group as={Col} md="6">
 							<div>
 								<h4>All Profits</h4>
 								<Row>
-									<Col><strong>Year</strong></Col>
-									<Col><strong>Profit</strong></Col>
-									<Col></Col>
+									<Col>
+										<strong>Year</strong>
+									</Col>
+									<Col>
+										<strong>Profit</strong>
+									</Col>
+									<Col />
 								</Row>
 								<ul>
+									{/* loop through and render all revenue rows */}
 									{!this.state.yearlyRevenue
 										? null
 										: this.state.yearlyRevenue.map((profit, i) => {
@@ -412,8 +435,9 @@ class TargetForm extends React.Component {
 				</div>
 				<Button type="submit">Submit form</Button>
 			</Form>
+			</div>
 		);
 	}
 }
 
-export default withRouter(TargetForm);
+export default withRouter(CompanyForm);

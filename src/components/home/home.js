@@ -1,27 +1,12 @@
 import React from 'react';
+import './Home.css';
 
-class Home extends React.Component {
-  constructor(props) { //<----Method
-    super(props);
-    this.state = { //<----Initialize state
-      value: ""
-    };
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(event) { //<---- Method/Set State
-    this.setState({ value: event.target.value });
-  }
-
-  render() {
-    let styles = {
-      textAlign: 'center'
-    }
-    return (
-      <div style={styles}>
-        <h1>Welcome to Target Tracker</h1>
+// Default landing page
+function Home(){
+  return(
+      <div className="centered">
+        <h1>Welcome to Company Tracker</h1>
       </div>
-    );
-  }
+  );
 }
 export default Home;

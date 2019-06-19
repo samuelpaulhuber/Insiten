@@ -1,13 +1,15 @@
 import React from 'react';
 import FontAwesomeIcon from 'react-fontawesome';
 import { faPencilAlt, faBinoculars } from '@fortawesome/free-solid-svg-icons';
-import './ViewTargets.css';
+import './ViewCompanies.css';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Button, Toast } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import util from '../../libs/util';
 import Spinner from '../Misc/Spinner';
-import ErrorToast from '../Misc/Toast';
-class ViewTargets extends React.Component {
+import ErrorToast from '../Misc/ErrorToast';
+
+// list of companies
+class ViewCompanies extends React.Component {
 	constructor(props) {
 		super(props);
 		this.deleteItem = this.deleteItem.bind(this);
@@ -50,7 +52,7 @@ class ViewTargets extends React.Component {
 					<Button>
 						<div className="icon-container">
 							<FontAwesomeIcon name="plus" icon={faPencilAlt} />
-							Add Target
+							Add Company
 						</div>
 					</Button>
 				</LinkContainer>
@@ -68,24 +70,23 @@ class ViewTargets extends React.Component {
 					<tbody>
 						{(!this.state.data || !this.state.data.map || this.state.data.map === undefined )
 							? null
-							: this.state.data.map((target, i) => {
-									console.log('Entered');
+							: this.state.data.map((company, i) => {
 									// Return the element. Also pass key
 									return (
-										<tr key={target.id}>
-											<td>{target.id}</td>
-											<td>{target.name}</td>
-											<td>{target.city}</td>
-											<td>{target.state}</td>
-											<td>{target.status}</td>
+										<tr key={company.id}>
+											<td>{company.id}</td>
+											<td>{company.name}</td>
+											<td>{company.city}</td>
+											<td>{company.state}</td>
+											<td>{company.status}</td>
 											<td>
 												<div className="flex-container">
 													<div className="icon-container">
-														<LinkContainer to={'/view/' + target.id}>
+														<LinkContainer to={'/view/' + company.id}>
 															<FontAwesomeIcon name="pencil" icon={faBinoculars} />
 														</LinkContainer>
 													</div>
-													<div className="icon-container delete" onClick={() => this.deleteItem(target.id)}>
+													<div className="icon-container delete" onClick={() => this.deleteItem(company.id)}>
 														<FontAwesomeIcon name="times" icon={faPencilAlt} />
 													</div>
 												</div>
@@ -99,7 +100,7 @@ class ViewTargets extends React.Component {
 		);
 		return (
 			<div>
-				<h2>View Targets</h2>
+				<h2>View Companies</h2>
 				<Spinner state={this.state} />
 				{table}
 				<ErrorToast state={this.state}></ErrorToast>
@@ -107,4 +108,4 @@ class ViewTargets extends React.Component {
 		);
 	}
 }
-export default ViewTargets;
+export default ViewCompanies;

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ViewTargets from './ViewTargets';
+import CompanyForm from './CompanyForm';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<ViewTargets />, div);
+  ReactDOM.render(<CompanyForm />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

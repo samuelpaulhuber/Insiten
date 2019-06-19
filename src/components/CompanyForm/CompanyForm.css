@@ -25,3 +25,9 @@ button.addButton {
 .allContacts .row {
     margin-bottom: 10px
 }
+
+.error-toast {
+	position: 'absolute';
+	top: 0;
+	right: 0;
+}

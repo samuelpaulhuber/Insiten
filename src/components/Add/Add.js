@@ -1,12 +1,14 @@
 import React from 'react';
-import TargetForm from '../TargetForm/TargetForm';
+import CompanyForm from '../CompanyForm/CompanyForm';
 import './Add.css';
-import ErrorToast from '../Misc/Toast';
 import Spinner from '../Misc/Spinner';
+
+// component for adding a new company
 class Add extends React.Component {
 	constructor(props) {
 		super(props);
 
+		// set our state
 		this.state = {
 			data: [],
 			isLoading: true,
@@ -14,11 +16,11 @@ class Add extends React.Component {
 		};
 	}
 	render(){
+		// render spinner and targetForm
 		return (
 			<div>
-				<h2>Add a new target</h2>
-				<Spinner state={this.state}></Spinner>
-				<TargetForm></TargetForm>
+				<h2>Add a new company</h2>
+				<CompanyForm></CompanyForm>
 			</div>
 		);
 	}	
