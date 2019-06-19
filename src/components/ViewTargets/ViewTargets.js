@@ -66,7 +66,7 @@ class ViewTargets extends React.Component {
 						</tr>
 					</thead>
 					<tbody>
-						{(!this.state.data && this.state.data.map )
+						{(!this.state.data || !this.state.data.map || this.state.data.map === undefined )
 							? null
 							: this.state.data.map((target, i) => {
 									console.log('Entered');

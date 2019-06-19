@@ -114,7 +114,7 @@ Util.save.apply(this, [company]);
 							ref="name"
 							name="name"
 							placeholder="Compnay name"
-							value={data.name}
+							defaultValue={data.name}
 						/>
 						<Form.Control.Feedback type="invalid">
 							Please enter the name of the company.
@@ -122,7 +122,7 @@ Util.save.apply(this, [company]);
 					</Form.Group>
 					<Form.Group as={Col} md="6" controlId="company.status">
 						<Form.Label>Status</Form.Label>
-						<Form.Control as="select" ref="status" name="status" value={data.status}>
+						<Form.Control as="select" ref="status" name="status" defaultValue={data.status}>
 							<option value="1">Researching</option>
 							<option value="2">Pending Approval</option>
 							<option value="3">Approved</option>
@@ -138,7 +138,7 @@ Util.save.apply(this, [company]);
 							placeholder="City"
 							ref="city"
 							name="city"
-							value={data.city}
+							defaultValue={data.city}
 							required
 						/>
 						<Form.Control.Feedback type="invalid">
@@ -147,7 +147,7 @@ Util.save.apply(this, [company]);
 					</Form.Group>
 					<Form.Group as={Col} md="3" controlId="company.state">
 						<Form.Label>State</Form.Label>
-						<Form.Control as="select" ref="state" name="state" value={data.state} required>
+						<Form.Control as="select" ref="state" name="state" defaultValue={data.state} required>
 							<option value="AL">Alabama</option>
 							<option value="AK">Alaska</option>
 							<option value="AZ">Arizona</option>
@@ -206,7 +206,7 @@ Util.save.apply(this, [company]);
 					</Form.Group>
 					<Form.Group as={Col} md="3" controlId="company.zip">
 						<Form.Label>Zip</Form.Label>
-						<Form.Control type="text" placeholder="Zip" value={data.zip} ref="zip" name="zip" required />
+						<Form.Control type="text" placeholder="Zip" defaultValue={data.zip} ref="zip" name="zip" required />
 						<Form.Control.Feedback type="invalid">
 							Please enter the zip code in which the company is located.
 						</Form.Control.Feedback>
@@ -218,7 +218,7 @@ Util.save.apply(this, [company]);
 						<Form.Control
 							as="textarea"
 							rows="3"
-							value={data.description}
+							defaultValue={data.description}
 							ref="description"
 							name="description"
 						/>

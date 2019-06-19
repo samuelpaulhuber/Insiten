@@ -1,5 +1,6 @@
 import axios from 'axios';
-const url = 'https://insitenserver.azurewebsites.net/api/'; //'http://localhost:5000/api/'
+const url = 'https://insitenserver.azurewebsites.net/api/'; 
+//const url = 'http://localhost:5000/api/'
 const util = {
 	getAll() {
 		axios

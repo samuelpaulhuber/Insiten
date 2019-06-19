@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a87835a02f6d21a8a329d038b3a1a5f8",
+    "revision": "f8fc4672ffc8203a7d9565e89c6cff62",
     "url": "/Insiten/index.html"
   },
   {
-    "revision": "80f979d6b5b3761c707e",
+    "revision": "8bb631099c20a6b2be77",
     "url": "/Insiten/static/css/main.cd7de814.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Insiten/static/js/2.d1474db7.chunk.js"
   },
   {
-    "revision": "80f979d6b5b3761c707e",
-    "url": "/Insiten/static/js/main.cc407311.chunk.js"
+    "revision": "8bb631099c20a6b2be77",
+    "url": "/Insiten/static/js/main.e0c04093.chunk.js"
   },
   {
     "revision": "10f3c6499c7cf1a326ab",
