@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/Insiten/static/css/main.cd7de814.chunk.css",
+    "main.css": "/Insiten/static/css/main.a7a9f0b4.chunk.css",
     "main.js": "/Insiten/static/js/main.b4b9544d.chunk.js",
     "main.js.map": "/Insiten/static/js/main.b4b9544d.chunk.js.map",
     "runtime~main.js": "/Insiten/static/js/runtime~main.2411df91.js",
@@ -8,8 +8,8 @@
     "static/js/2.592575ec.chunk.js": "/Insiten/static/js/2.592575ec.chunk.js",
     "static/js/2.592575ec.chunk.js.map": "/Insiten/static/js/2.592575ec.chunk.js.map",
     "index.html": "/Insiten/index.html",
-    "precache-manifest.473985b4b836d30d9b0bb56ffd15bc2c.js": "/Insiten/precache-manifest.473985b4b836d30d9b0bb56ffd15bc2c.js",
+    "precache-manifest.180eda42a6649b79f8705c9bc15c6d4f.js": "/Insiten/precache-manifest.180eda42a6649b79f8705c9bc15c6d4f.js",
     "service-worker.js": "/Insiten/service-worker.js",
-    "static/css/main.cd7de814.chunk.css.map": "/Insiten/static/css/main.cd7de814.chunk.css.map"
+    "static/css/main.a7a9f0b4.chunk.css.map": "/Insiten/static/css/main.a7a9f0b4.chunk.css.map"
   }
 }
