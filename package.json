@@ -2,7 +2,7 @@
   "name": "insiten",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://samuelpaulhuber.github.io/Insiten/",
+  "homepage": "https://samuelpaulhuber.github.io/insiten",
   "predeploy": "npm run build",
   "deploy": "gh-pages -d build",
   "dependencies": {
@@ -22,7 +22,8 @@
     "react-tag-input": "^6.4.0"
   },
   "scripts": {
-    "deploy": "node --version",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
