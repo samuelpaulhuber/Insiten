@@ -7,7 +7,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import View from './components/Edit/Edit';
 import Add from './components/Add/Add';
 import CompanyForm from './components/CompanyForm/CompanyForm';
-import ViewCompanies from './components/ViewComanies/ViewComanies';
+import ViewCompanies from './components/ViewCompanies/ViewCompanies';
 function App() {
 	return (
 		<div className="max-container">
