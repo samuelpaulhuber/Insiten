@@ -100,7 +100,7 @@ class ViewCompanies extends React.Component {
 		);
 		return (
 			<div>
-				<h2>View Companies</h2>
+				<h2>Manage Companies</h2>
 				<Spinner state={this.state} />
 				{table}
 				<ErrorToast state={this.state}></ErrorToast>

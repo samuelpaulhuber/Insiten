@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { Navbar, Nav } from 'react-bootstrap';
 import { Switch, Route } from 'react-router-dom';
-import Home from './components/Home/Home';
+import Home from './components/home/home';
 import { LinkContainer } from 'react-router-bootstrap';
 import View from './components/Edit/Edit';
 import Add from './components/Add/Add';
@@ -22,7 +22,7 @@ function App() {
 						<Nav.Link>Home</Nav.Link>
 					</LinkContainer>
 					<LinkContainer to="/viewCompanies">
-						<Nav.Link>View Companies</Nav.Link>
+						<Nav.Link>Manage Companies</Nav.Link>
 					</LinkContainer>
 				</Nav>
 			</Navbar>
