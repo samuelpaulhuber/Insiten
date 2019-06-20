@@ -9,8 +9,12 @@ import Add from './components/Add/Add';
 import CompanyForm from './components/CompanyForm/CompanyForm';
 import ViewCompanies from './components/ViewCompanies/ViewCompanies';
 function App() {
+	const styles = {
+		marginLef: '10%',
+		marginRight: '10%'
+	}
 	return (
-		<div className="max-container">
+		<div style={styles} className="max-container">
 			<Navbar bg="dark" variant="dark">
 				<Navbar.Brand>Company Tracker</Navbar.Brand>
 				<Nav className="mr-auto">
