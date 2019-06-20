@@ -2,7 +2,7 @@
   "name": "insiten",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://samuelpaulhuber.github.io",
+  "homepage": "https://samuelpaulhuber.github.io/insiten",
   "predeploy": "npm run build",
   "deploy": "gh-pages -d build",
   "dependencies": {
